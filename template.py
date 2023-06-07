@@ -20,6 +20,7 @@ list_of_files = [
      'config/config.yaml',
      'params.yaml',
      'requirements.txt',
+     'setup.py',
      'research/trails.ipynb'
      ]
 
