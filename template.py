@@ -19,7 +19,7 @@ list_of_files = [
      f"src/{project_name}/pipeline/__init__.py",
      'config/config.yaml',
      'params.yaml',
-     'requirments.txt',
+     'requirements.txt',
      'research/trails.ipynb'
      ]
 
