@@ -3,7 +3,7 @@ import sys
 import logging
 from datetime import datetime
 
-logging_string = "[%(asctime)s] || %(filename)s || %(lineno)d || %(name)s || %(funcName)s() || %(lineno)s || %(levelname)s || %(message)s ||"
+logging_string = "[%(asctime)s] || %(filename)s || %(lineno)d || %(name)s || %(funcName)s() || %(lineno)s || %(levelname)s || %(message)s"
 
 log_dir = 'logs'
 

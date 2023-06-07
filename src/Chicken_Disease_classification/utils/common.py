@@ -6,9 +6,12 @@ import json
 import joblib
 import base64
 from typing import Any
-from box import ConfigBox
+from box import Box,ConfigBox
 from pathlib import Path
 from ensure import ensure_annotations
+
+
+
 
 
 @ensure_annotations
@@ -25,16 +28,19 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
     """
 
     try:
-        with open(path_to_yaml) as yaml_file:
-            yaml_data = yaml.safe_load(yaml_file)
-            logger.info(f"yaml file : {path_to_yaml} loaded successfully")
-            return ConfigBox(yaml_data)
+        yaml_data = yaml.safe_load(open(path_to_yaml))
+        logger.info(f"yaml file : {path_to_yaml} loaded successfully")
+        yaml_data = ConfigBox(yaml_data)
+        return yaml_data
     except BoxValueError:
         logger.error("Error Occurred at ValueError: {}".format(path_to_yaml))
         raise ValueError('Yaml file is Empty or Invalid')
     except Exception as e:
         logger.error(f"Error occured {e}")
         raise e
+
+
+
 
 
 @ensure_annotations
@@ -61,6 +67,9 @@ def create_directories(path_to_directories: list, verbose=True):
                 logger.info(f"Directory {directory} already exists")
 
 
+
+
+
 @ensure_annotations
 def save_json(path: Path, data: dict):
     """
@@ -77,6 +86,9 @@ def save_json(path: Path, data: dict):
     with open(path, 'w') as outfile:
         json.dump(data, outfile, indent=4)
     logger.info(f"json file saved at {path}")
+
+
+
 
 
 @ensure_annotations
@@ -97,6 +109,9 @@ def load_json(path: Path):
     return ConfigBox(data)
 
 
+
+
+
 @ensure_annotations
 def save_bin(data: Any, path: Path):
     """
@@ -111,8 +126,12 @@ def save_bin(data: Any, path: Path):
     joblib.dump(value=data, filename=path)
     logger.info(f"binary file saved at {path}")
 
+
+
+
+
 @ensure_annotations
-def get_file_size(path: Path):
+def get_file_size(path: str) -> str:
     """
     This function takes a file path as input and returns the size of the file in kilobytes (KB) rounded
     to the nearest integer.
@@ -126,6 +145,9 @@ def get_file_size(path: Path):
     """
     size_in_kb = round(os.path.getsize(path)/1024)
     return f"~ {size_in_kb} KB"
+
+
+
 
 def decodeImage(imgString,filename):
     """
@@ -150,3 +172,6 @@ def encodeImageintobase64(croppedImagePath):
     """
     with open(croppedImagePath,'rb') as f:
         return base64.b16encode(f.read())
+
+
+
