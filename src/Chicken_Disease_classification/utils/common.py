@@ -70,6 +70,8 @@ def create_directories(path_to_directories: list, verbose=True):
 
 
 
+import json
+
 @ensure_annotations
 def save_json(path: Path, data: dict):
     """
@@ -83,9 +85,27 @@ def save_json(path: Path, data: dict):
     :return: None
     """
 
-    with open(path, 'w') as outfile:
-        json.dump(data, outfile, indent=4)
-    logger.info(f"json file saved at {path}")
+    # Check if the JSON file exists
+    if path.is_file():
+        # Load existing data from the JSON file if it is not empty
+        with open(path, 'r') as infile:
+            file_content = infile.read()
+            existing_data = json.loads(file_content) if file_content else {}
+        
+        # Update the existing data with new keys and values
+        existing_data.update(data)
+        
+        # Save the updated data back to the JSON file
+        with open(path, 'w') as outfile:
+            json.dump(existing_data, outfile, indent=4)
+            
+        logger.info(f"JSON file updated at {path}")
+    else:
+        # If the JSON file doesn't exist, save the data as a new file
+        with open(path, 'w') as outfile:
+            json.dump(data, outfile, indent=4)
+            
+        logger.info(f"JSON file saved at {path}")
 
 
 
