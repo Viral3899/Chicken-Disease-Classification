@@ -8,8 +8,8 @@ STAGE_NAME_INGESTION = 'Data Ingestion Stage'
 
 try:
     logger.info(f'\n\n{"**"*50}\nStarted {STAGE_NAME_INGESTION}\n{"**"*50}\n')
-    obj = DataIngestionTrainingPipeline()
-    obj.main()
+    data_ingestion = DataIngestionTrainingPipeline()
+    data_ingestion.main()
     logger.info(f'\n\n{"**"*50}\nCompleted {STAGE_NAME_INGESTION}\n{"**"*50}\n\n')
     
 except Exception as e:
@@ -17,12 +17,22 @@ except Exception as e:
     raise e
 
 
+# try:
+#    logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+#    data_ingestion = DataIngestionTrainingPipeline()
+#    data_ingestion.main()
+#    logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+# except Exception as e:
+#         logger.exception(e)
+#         raise e
+
+
 STAGE_NAME_PREPARE_BASE_MODEL = 'Prepare Base Model'
 
 try:
     logger.info(f'\n\n{"**"*50}\nStarted {STAGE_NAME_PREPARE_BASE_MODEL}\n{"**"*50}\n')
-    obj = PrepareBaseModelTrainingPipeline()
-    obj.main()
+    prepare_model = PrepareBaseModelTrainingPipeline()
+    prepare_model.main()
     logger.info(f'\n\n{"**"*50}\nCompleted {STAGE_NAME_PREPARE_BASE_MODEL}\n{"**"*50}\n\n')
     
 except Exception as e:
@@ -32,8 +42,8 @@ except Exception as e:
 STAGE_NAME_TRAINING= 'Training'
 try:
     logger.info(f'\n\n{"**"*50}\nStarted {STAGE_NAME_TRAINING}\n{"**"*50}\n')
-    obj = ModelTrainingPipeline()
-    obj.main()
+    trainer = ModelTrainingPipeline()
+    trainer.main()
     logger.info(f'\n\n{"**"*50}\nCompleted {STAGE_NAME_TRAINING}\n{"**"*50}\n\n')
     
 except Exception as e:
