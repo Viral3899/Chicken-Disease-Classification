@@ -151,7 +151,7 @@ def save_bin(data: Any, path: Path):
 
 
 @ensure_annotations
-def get_file_size(path: str) -> str:
+def get_file_size(path: Path) -> str:
     """
     This function takes a file path as input and returns the size of the file in kilobytes (KB) rounded
     to the nearest integer.
