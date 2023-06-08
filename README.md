@@ -11,3 +11,6 @@
 7. src/pipeline/*
 8. app.py or main.py
 9. dvc.yaml
+
+
+## URI : 015889189520.dkr.ecr.us-east-2.amazonaws.com/chicken_repo

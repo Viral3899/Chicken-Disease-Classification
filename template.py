@@ -24,7 +24,9 @@ list_of_files = [
      'research/trails.ipynb',
      'main.py',
      'app.py',
-     'templates/index.html'
+     'templates/index.html',
+     'DockerFile',
+     '.dockerignore'
      ]
 
 for filepath in list_of_files:
