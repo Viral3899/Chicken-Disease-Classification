@@ -1,64 +1,48 @@
-from Chicken_Disease_classification import logger
-from Chicken_Disease_classification.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
-from Chicken_Disease_classification.pipeline.stage_02_prepare_base_model import PrepareBaseModelTrainingPipeline
-from Chicken_Disease_classification.pipeline.stage_03_training import ModelTrainingPipeline
-from Chicken_Disease_classification.pipeline.stage_04_evaluation import EvaluationPipeline
+from flask import Flask, request, jsonify, render_template
+import os
+from flask_cors import CORS, cross_origin
+from Chicken_Disease_classification.utils.common import decodeImage
+from Chicken_Disease_classification.pipeline.predict import PredictionPipeline
 
 
-STAGE_NAME_INGESTION = 'Data Ingestion Stage'
+os.putenv('LANG', 'en_US.UTF-8')
+os.putenv('LC_ALL', 'en_US.UTF-8')
 
-try:
-    logger.info(f'\n\n{"**"*50}\nStarted {STAGE_NAME_INGESTION}\n{"**"*50}\n')
-    data_ingestion = DataIngestionTrainingPipeline()
-    data_ingestion.main()
-    logger.info(f'\n\n{"**"*50}\nCompleted {STAGE_NAME_INGESTION}\n{"**"*50}\n\n')
-    
-except Exception as e:
-    logger.exception(e)
-    raise e
+app = Flask(__name__)
+CORS(app)
 
 
-# try:
-#    logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-#    data_ingestion = DataIngestionTrainingPipeline()
-#    data_ingestion.main()
-#    logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-# except Exception as e:
-#         logger.exception(e)
-#         raise e
+class App:
+    def __init__(self):
+        self.filename = "inputImage.jpg"
+        self.classifier = PredictionPipeline(self.filename)
 
 
-STAGE_NAME_PREPARE_BASE_MODEL = 'Prepare Base Model'
-
-try:
-    logger.info(f'\n\n{"**"*50}\nStarted {STAGE_NAME_PREPARE_BASE_MODEL}\n{"**"*50}\n')
-    prepare_model = PrepareBaseModelTrainingPipeline()
-    prepare_model.main()
-    logger.info(f'\n\n{"**"*50}\nCompleted {STAGE_NAME_PREPARE_BASE_MODEL}\n{"**"*50}\n\n')
-    
-except Exception as e:
-    logger.exception(e)
-    raise e
- 
-STAGE_NAME_TRAINING= 'Training'
-try:
-    logger.info(f'\n\n{"**"*50}\nStarted {STAGE_NAME_TRAINING}\n{"**"*50}\n')
-    trainer = ModelTrainingPipeline()
-    trainer.main()
-    logger.info(f'\n\n{"**"*50}\nCompleted {STAGE_NAME_TRAINING}\n{"**"*50}\n\n')
-    
-except Exception as e:
-    logger.exception(e)
-    raise e
+@app.route("/", methods=['GET'])
+@cross_origin()
+def home():
+    return render_template('index.html')
 
 
-STAGE_NAME_EVALUATION = "Evaluation stage"
+@app.route("/train", methods=['GET','POST'])
+@cross_origin()
+def trainRoute():
+    os.system("python main.py")
+    return "Training done successfully!"
 
-try:
-    logger.info(f'\n\n{"**"*50}\nStarted {STAGE_NAME_EVALUATION}\n{"**"*50}\n')
-    obj = EvaluationPipeline()
-    obj.main()
-    logger.info(f'\n\n{"**"*50}\nCompleted {STAGE_NAME_EVALUATION}\n{"**"*50}\n\n')
-except Exception as e:
-    logger.exception(e)
-    raise e
+
+
+@app.route("/predict", methods=['POST'])
+@cross_origin()
+def predictRoute():
+    image = request.json['image']
+    decodeImage(image, clApp.filename)
+    result = clApp.classifier.predict()
+    return jsonify(result)
+
+
+if __name__ == "__main__":
+    clApp = App()
+    app.run(host='0.0.0.0', port=8080) #local host
+    # app.run(host='0.0.0.0', port=8080) #for AWS
+    # app.run(host='0.0.0.0', port=80) #for AZURE
