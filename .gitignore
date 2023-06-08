@@ -5,7 +5,6 @@ __pycache__/
 chicken/
 # C extensions
 *.so
-research
 artifacts
 # Distribution / packaging
 .Python
