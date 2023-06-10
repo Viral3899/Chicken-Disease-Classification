@@ -12,19 +12,25 @@ class PredictionPipeline:
 
     
     def predict(self):
-        # load model
-        model = load_model(os.path.join("artifacts","training", "model.h5"))
+    # Load model
+        model = load_model(os.path.join("artifacts", "training", "model.h5"))
 
         imagename = self.filename
-        test_image = image.load_img(imagename, target_size = (224,224))
+        test_image = image.load_img(imagename, target_size=(224, 224))
         test_image = image.img_to_array(test_image)
-        test_image = np.expand_dims(test_image, axis = 0)
-        result = np.argmax(model.predict(test_image), axis=1)
-        print(result)
+        test_image = test_image / 255.0  # Normalize the image
 
-        if result[0] == 1:
-            prediction = 'Healthy'
-            return [{ "image" : prediction}]
-        else:
-            prediction = 'Coccidiosis'
-            return [{ "image" : prediction}]
+        # Expand dimensions to match the input shape expected by the model
+        test_image = np.expand_dims(test_image, axis=0)
+
+        # Make the prediction
+        predictions = model.predict(test_image)
+        print('-------------->',predictions,'-------------->')
+        predicted_class_index = np.argmax(predictions)
+        print(predicted_class_index)
+        class_labels = sorted(os.listdir('artifacts\data_ingestion\Chicken-fecal-images'))  # Replace with the actual path
+
+        prediction = class_labels[predicted_class_index]
+
+        return [{"image": prediction}]
+
