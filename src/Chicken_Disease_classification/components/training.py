@@ -14,10 +14,15 @@ class Training:
         )
     
     def train_valid_generator(self):
-
         datagenerator_kwargs = dict(
-            rescale = 1./255,
-            validation_split=0.20
+            rescale=1./255,
+            validation_split=0.20,
+            rotation_range=40,
+            width_shift_range=0.2,
+            height_shift_range=0.2,
+            shear_range=0.2,
+            zoom_range=0.2,
+            fill_mode='nearest'
         )
 
         dataflow_kwargs = dict(
@@ -26,29 +31,16 @@ class Training:
             interpolation="bilinear"
         )
 
-        valid_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
+        train_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
             **datagenerator_kwargs
         )
 
-        self.valid_generator = valid_datagenerator.flow_from_directory(
+        self.valid_generator = train_datagenerator.flow_from_directory(
             directory=self.config.training_data,
             subset="validation",
             shuffle=False,
             **dataflow_kwargs
         )
-
-        if self.config.params_is_augmentation:
-            train_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
-                rotation_range=40,
-                horizontal_flip=True,
-                width_shift_range=0.2,
-                height_shift_range=0.2,
-                shear_range=0.2,
-                zoom_range=0.2,
-                **datagenerator_kwargs
-            )
-        else:
-            train_datagenerator = valid_datagenerator
 
         self.train_generator = train_datagenerator.flow_from_directory(
             directory=self.config.training_data,
@@ -56,6 +48,10 @@ class Training:
             shuffle=True,
             **dataflow_kwargs
         )
+
+        num_training_samples = self.train_generator.samples * (1 + train_datagenerator.rotation_range // 40) * 2
+        print(f"Number of training samples after augmentation: {num_training_samples}")
+
 
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
