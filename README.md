@@ -89,7 +89,7 @@ open up you local host and port
 
 	
 ## 3. Create ECR repo to store/save docker image
-    - Save the URI: 015889189520.dkr.ecr.us-east-2.amazonaws.com/chicken_repo
+    - Save the URI: 015889189520.dkr.ecr.us-east-2.amazonaws.com/chickenrepo
 
 	
 ## 4. Create EC2 machine (Ubuntu) 
