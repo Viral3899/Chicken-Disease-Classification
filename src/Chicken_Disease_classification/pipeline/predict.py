@@ -4,15 +4,12 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 
 
-
 class PredictionPipeline:
-    def __init__(self,filename):
-        self.filename =filename
+    def __init__(self, filename):
+        self.filename = filename
 
-
-    
     def predict(self):
-    # Load model
+        # Load model
         model = load_model(os.path.join("artifacts", "training", "model.h5"))
 
         imagename = self.filename
@@ -25,12 +22,10 @@ class PredictionPipeline:
 
         # Make the prediction
         predictions = model.predict(test_image)
-        print('-------------->',predictions,'-------------->')
+        print('----------->', predictions, '<-----------')
         predicted_class_index = np.argmax(predictions)
-        print(predicted_class_index)
-        class_labels = sorted(os.listdir('artifacts\data_ingestion\Chicken-fecal-images'))  # Replace with the actual path
+        class_labels = sorted(os.listdir('artifacts/data_ingestion/Chicken-fecal-images'))  # Replace with the actual path
 
         prediction = class_labels[predicted_class_index]
 
-        return [{"image": prediction}]
-
+        return np.max(predictions), prediction
