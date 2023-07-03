@@ -24,8 +24,8 @@ class PredictionPipeline:
         predictions = model.predict(test_image)
         print('----------->', predictions, '<-----------')
         predicted_class_index = np.argmax(predictions)
-        class_labels = sorted(os.listdir('artifacts/data_ingestion/Chicken-fecal-images'))  # Replace with the actual path
-
+        class_labels = ['Coccidiosis', 'Healthy']  # Replace with the actual path
+        print(class_labels)
         prediction = class_labels[predicted_class_index]
 
         return np.max(predictions), prediction
